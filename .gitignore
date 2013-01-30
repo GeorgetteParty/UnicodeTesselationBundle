@@ -1,0 +1,16 @@
+# KDE
+.directory
+
+# PHPStorm
+.idea/*
+
+# Apple
+.DS_Store
+
+# Configuration
+phpunit.xml
+
+# Composer
+vendor/*
+composer.lock
+composer.phar

@@ -1,0 +1,29 @@
+{
+  "name": "georgette-party/unicode-tesselation-bundle",
+  "type": "symfony-bundle",
+  "description": "Read / write ASCII or Unicode maps with square or hexagonal tiling",
+  "keywords": ["ASCII", "Unicode", "Table", "Grid", "Map", "Square", "Hexagon"],
+  "homepage": "https://github.com/GeorgetteParty/UnicodeTesselationBundle",
+  "license":  "Apache",
+  "authors": [
+    {
+      "name":  "Goutte",
+      "email": "antoine@goutenoir.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4"
+  },
+  "require-dev": {
+    "symfony/dependency-injection": ">=2.1,<2.3-dev"
+    ,"symfony/config": ">=2.1,<2.3-dev"
+    ,"symfony/yaml": ">=2.1,<2.3-dev"
+    ,"symfony/http-kernel": ">=2.1,<2.3-dev"
+  },
+  "autoload": {
+    "psr-0": {
+      "GeorgetteParty\\UnicodeTesselationBundle": ""
+    }
+  },
+  "target-dir": "GeorgetteParty/UnicodeTesselationBundle"
+}
