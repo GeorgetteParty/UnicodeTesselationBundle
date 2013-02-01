@@ -1,6 +1,6 @@
 <?php
 
-namespace GeorgetteParty\UnicodeTesselationBundle\Tests;
+namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
 //use Gmf\GmfBundle\Tool\String\AsciiHexGrid;
 
@@ -48,41 +48,12 @@ if (!function_exists(__NAMESPACE__.'\\'.'array_merge_recursive_with_strict_keys'
  *
  * @author Goutte
  */
-class AsciiHexGridTest extends \PHPUnit_Framework_TestCase
+class AsciiHexagonTest extends DriverTestCase
 {
 
-    public function setUp() {}
-
-    public function tearDown() {}
-
-    /**
-     * @param $message
-     * @param $array
-     * @param $expected
-     *
-     * @return void
-     * @dataProvider arrayToStringProvider
-     */
-    public function testToString($message, $array, $expected)
+    public function createDriver()
     {
-        $actual = AsciiHexGrid::toString($array);
-
-        $this->assertEquals($expected, $actual, $message);
-    }
-
-    /**
-     * @param $message
-     * @param $expected
-     * @param $string
-     *
-     * @return void
-     * @dataProvider stringToArrayProvider
-     */
-    public function testToArray($message, $expected, $string)
-    {
-        $actual = AsciiHexGrid::toArray($string);
-
-        $this->assertEquals($expected, $actual, $message);
+        return new \GeorgetteParty\UnicodeTesselationBundle\Driver\Ascii\Hexagon();
     }
 
 

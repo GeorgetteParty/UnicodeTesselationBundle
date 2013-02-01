@@ -3,6 +3,7 @@
 namespace GeorgetteParty\UnicodeTesselationBundle\Driver\Ascii;
 
 use GeorgetteParty\UnicodeTesselationBundle\Driver\Driver;
+use GeorgetteParty\UnicodeTesselationBundle\Exception\CellFitnessException;
 
 if (!function_exists(__NAMESPACE__.'\\'.'strpos_recursive')) {
     /**

@@ -1,51 +1,22 @@
 <?php
 
-namespace GeorgetteParty\UnicodeTesselationBundle\Tests;
+namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
-//use Gmf\GmfBundle\Tool\String\AsciiSquareGrid;
 
 // cool link : http://recessiondodgetovictory.wordpress.com/2011/01/12/ascii-chessboard/
 // table generator: http://www.sensefulsolutions.com/2010/10/format-text-as-table.html (use Unicode Art)
 // text generator : http://www.network-science.de/ascii/ and http://patorjk.com/software/taag/
 
+
 /**
  * @author Goutte
  */
-class AsciiSquareGridTest extends \PHPUnit_Framework_TestCase
+class AsciiSquareTest extends DriverTestCase
 {
 
-    public function setUp() {}
-
-    public function tearDown() {}
-
-    /**
-     * @param $message
-     * @param $array
-     * @param $expected
-     *
-     * @return void
-     * @dataProvider arrayToStringProvider
-     */
-    public function testToString($message, $array, $expected)
+    public function createDriver()
     {
-        $actual = AsciiSquareGrid::toString($array);
-
-        $this->assertEquals($expected, $actual, $message);
-    }
-
-    /**
-     * @param $message
-     * @param $expected
-     * @param $string
-     *
-     * @return void
-     * @dataProvider stringToArrayProvider
-     */
-    public function testToArray($message, $expected, $string)
-    {
-        $actual = AsciiSquareGrid::toArray($string);
-
-        $this->assertEquals($expected, $actual, $message);
+        return new \GeorgetteParty\UnicodeTesselationBundle\Driver\Ascii\Square();
     }
 
 
@@ -244,7 +215,6 @@ EOF
 
         );
     }
-
 }
 
 
