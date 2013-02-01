@@ -2,7 +2,6 @@
 
 namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
-//use Gmf\GmfBundle\Tool\String\AsciiHexGrid;
 
 if (!function_exists(__NAMESPACE__.'\\'.'array_merge_recursive_with_strict_keys')) {
     /**

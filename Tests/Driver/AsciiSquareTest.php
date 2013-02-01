@@ -2,11 +2,9 @@
 
 namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
-
-// cool link : http://recessiondodgetovictory.wordpress.com/2011/01/12/ascii-chessboard/
-// table generator: http://www.sensefulsolutions.com/2010/10/format-text-as-table.html (use Unicode Art)
+// cool chess chars : http://recessiondodgetovictory.wordpress.com/2011/01/12/ascii-chessboard/
+// table generator : http://www.sensefulsolutions.com/2010/10/format-text-as-table.html (use Unicode Art)
 // text generator : http://www.network-science.de/ascii/ and http://patorjk.com/software/taag/
-
 
 /**
  * @author Goutte

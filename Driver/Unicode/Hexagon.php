@@ -1,6 +1,6 @@
 <?php
 
-namespace GeorgetteParty\UnicodeTesselationBundle\Driver\Ascii;
+namespace GeorgetteParty\UnicodeTesselationBundle\Driver\Unicode;
 
 use GeorgetteParty\UnicodeTesselationBundle\Driver\Hexagon as HexagonBase;
 
@@ -16,11 +16,11 @@ class Hexagon extends HexagonBase
 
     public function getBoxDrawingDiagonalBL2UR()
     {
-        return '/';
+        return '╱';
     }
 
     public function getBoxDrawingDiagonalBR2UL()
     {
-        return '\\';
+        return '╲';
     }
 }
