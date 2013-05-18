@@ -50,8 +50,6 @@ if (!function_exists(__NAMESPACE__.'\\'.'mb_str_pad')) {
  * Please set (if you are using Unicode characters) :
  * mb_internal_encoding('UTF-8');
  *
- * See Gmf\GmfBundle\Tests\Tool\String\AsciiSquareGridTest for documentation on how this behaves fixme
- *
  * Usage example :
  *
  * echo AsciiSquareGrid::toString(array(array('A', 'B'), array(null, 'D')));
