@@ -194,7 +194,17 @@ EOF
 +---+---+
 EOF
             ),
-
+            array(
+                "It should read rows and then columns",
+                array(array('A', 'B', 'C'), array('D', 'E', 'F')),
+                <<<EOF
++---+---+---+
+| A | B | C |
++---+---+---+
+| D | E | F |
++---+---+---+
+EOF
+            ),
             array(
                 "It should read bigger cells and manage multiline content",
                 array(array('LUCKY', '777'), array('EARTH & VENUS', '1234')),

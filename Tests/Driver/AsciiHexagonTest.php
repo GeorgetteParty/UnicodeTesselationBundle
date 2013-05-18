@@ -12,7 +12,7 @@ if (!function_exists(__NAMESPACE__.'\\'.'array_merge_recursive_with_strict_keys'
     function array_merge_recursive_with_strict_keys()
     {
         if (func_num_args() < 2) {
-            trigger_error(__FUNCTION__ .' needs two or more array arguments', E_USER_WARNING);
+            trigger_error(__FUNCTION__.' needs two or more array arguments', E_USER_WARNING);
             return false;
         }
 
@@ -23,7 +23,7 @@ if (!function_exists(__NAMESPACE__.'\\'.'array_merge_recursive_with_strict_keys'
             $array = array_shift($arrays);
 
             if (!is_array($array)) {
-                trigger_error(__FUNCTION__ .' encountered a non array argument', E_USER_WARNING);
+                trigger_error(__FUNCTION__.' encountered a non array argument', E_USER_WARNING);
                 return false;
             }
 
@@ -294,8 +294,15 @@ EOF
     }
 
 
-
-
+    /**
+     * This is used to build an imbricated array holding the barycentric coordinates as keys
+     *
+     * @param $value
+     * @param $x
+     * @param $y
+     * @param $z
+     * @return array
+     */
     public function buildArray($value, $x, $y, $z)
     {
         return array($x => array($y => array($z => $value)));

@@ -60,6 +60,7 @@ if (!function_exists(__NAMESPACE__.'\\'.'mb_str_pad')) {
  */
 abstract class Hexagon implements Driver
 {
+    // these depend if we're ASCII or Unicode, so they don't belong here
 //    const BOX_DRAWING_HORIZONTAL_LINE = '_';
 //    const BOX_DRAWING_DIAGONAL_BL2UR  = '/';
 //    const BOX_DRAWING_DIAGONAL_BR2UL  = '\\';
