@@ -7,7 +7,7 @@ use GeorgetteParty\UnicodeTesselationBundle\Exception\CellFitnessException;
 
 if (!function_exists(__NAMESPACE__.'\\'.'strpos_recursive')) {
     /**
-     * Returns an array of the positions of $nedle in $haystack, starting at $offset
+     * Returns an array of the positions of $needle in $haystack, starting at $offset
      *
      * @param string $haystack
      * @param string $needle

@@ -57,6 +57,8 @@ abstract class DriverTestCase extends \PHPUnit_Framework_TestCase
     }
 
 
+    // Override the methods below
+
     public function arrayToStringProvider()
     {
         $r = array();

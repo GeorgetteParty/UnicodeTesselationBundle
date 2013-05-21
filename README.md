@@ -104,6 +104,7 @@ It will choose an hexagon to be the origin in a barycentric coordinate system.
 It tries to assert which hexagon is the most appropriate to be the origin.
 
 The PHP array will be constructed as to give each hexagon barycentric coordinates.
+The coordinates will be the keys, as in `array[a][b][c] = value`
 
 Look into [the tests](Tests/Driver/AsciiHexagonTest.php) for the exact specifications of the PHP arrays.
 
