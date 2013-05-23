@@ -172,7 +172,7 @@ class Cube
             $values = array_merge($values, array_reverse($v));
             // ( -1 0 0 )
             $v = $this->getValuesOfTilesValidatingEquality($array, -1 * $edgeSize, $coordValues[$edgeSize - 1 - $i], null);
-            $values = array_merge($values, $v); // fixme : understand why no reverse ?!
+            $values = array_merge($values, array_reverse($v));
 
             $grid .= $this->getLineOfValues($values) . PHP_EOL;
         }

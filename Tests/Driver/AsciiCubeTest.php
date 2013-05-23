@@ -86,6 +86,7 @@ class AsciiCubeTest extends DriverTestCase
 
     /**
      * Used to build the imbricated array[x][y][z] = value
+     * Arrays will be sorted with increasing keys (min negative to max positive)
      *
      * @param $array
      * @return array
@@ -96,6 +97,17 @@ class AsciiCubeTest extends DriverTestCase
         foreach ($array as $v) {
             $this->pushToArray($r, $v[0], $v[1], $v[2], $v[3]);
         }
+
+        ksort($r, SORT_NUMERIC);
+        foreach ($r as $kX=>$rX) {
+            ksort($r[$kX], SORT_NUMERIC);
+        }
+        foreach ($r as $kX=>$rX) {
+            foreach ($rX as $kY=>$rY) {
+                ksort($r[$kX][$kY], SORT_NUMERIC);
+            }
+        }
+
         return $r;
     }
 
