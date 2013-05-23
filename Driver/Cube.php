@@ -4,7 +4,7 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Driver;
 
 use GeorgetteParty\UnicodeTesselationBundle\Exception\InvalidCubeDataException;
 
-// FIXME : DRY THESE FUNCTIONS UP (other tests use them too)
+// FIXME : DRY THESE FUNCTIONS UP (other tests/drivers use them too)
 
 if (!function_exists(__NAMESPACE__.'\\'.'strpos_recursive')) {
     /**
@@ -68,7 +68,7 @@ class Cube
 
     /**
      * @param  string $string
-     * @return array fixme
+     * @return array
      */
     public function toArray($string)
     {
@@ -88,14 +88,44 @@ class Cube
         for ($i = 0 ; $i < $edgeSize ; $i++) {
             $line = substr($arrayOfLines[2*$i+1],2);
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $pos = $j * 4;
-                $value = mb_strcut($line, $pos, 1);
+                $value = mb_strcut($line, 4 * $j, 1);
                 $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize, $edgeSize - 1 - 2*$i);
             }
         }
 
-        // Pass 2 : fixme
+        // Pass 2 : Middle line
+        for ($i = 0 ; $i < $edgeSize ; $i++) {
+            $line = substr($arrayOfLines[2*$i+1+2*$edgeSize],2);
+            // ( 0 0 -1 )
+            for ($j = 0 ; $j < $edgeSize ; $j++) {
+                $value = mb_strcut($line, ($j+$edgeSize*0) * 4, 1);
+                $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize - 1 - 2*$i, -1 * $edgeSize);
+            }
+            // ( 1 0 0 )
+            for ($j = 0 ; $j < $edgeSize ; $j++) {
+                $value = mb_strcut($line, ($j+$edgeSize*1) * 4, 1);
+                $this->pushToArray($array, $value, $edgeSize, $edgeSize - 1 - 2*$i, -1 * $edgeSize + 1 + 2*$j);
+            }
+            // ( 0 0 1 )
+            for ($j = 0 ; $j < $edgeSize ; $j++) {
+                $value = mb_strcut($line, ($j+$edgeSize*2) * 4, 1);
+                $this->pushToArray($array, $value, $edgeSize - 1 - 2*$j, $edgeSize - 1 - 2*$i, $edgeSize);
+            }
+            // ( -1 0 0 )
+            for ($j = 0 ; $j < $edgeSize ; $j++) {
+                $value = mb_strcut($line, ($j+$edgeSize*3) * 4, 1);
+                $this->pushToArray($array, $value, -1 * $edgeSize, $edgeSize - 1 - 2*$i, $edgeSize - 1 - 2*$j);
+            }
+        }
 
+        // Pass 3 : Bottom ( 0 -1 0 )
+        for ($i = 0 ; $i < $edgeSize ; $i++) {
+            $line = substr($arrayOfLines[2*$i+1+4*$edgeSize],2);
+            for ($j = 0 ; $j < $edgeSize ; $j++) {
+                $value = mb_strcut($line, 4 * $j, 1);
+                $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, -1 * $edgeSize, -1 * $edgeSize + 1 + 2*$i);
+            }
+        }
 
         $this->sortMultiArrayByKeys($array);
 
