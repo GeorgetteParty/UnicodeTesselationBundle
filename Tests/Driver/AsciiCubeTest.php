@@ -84,6 +84,21 @@ class AsciiCubeTest extends DriverTestCase
         return $array;
     }
 
+    public function sortMultiArrayByKeys(&$array)
+    {
+        ksort($array, SORT_NUMERIC);
+        foreach ($array as $kX=>$rX) {
+            ksort($array[$kX], SORT_NUMERIC);
+        }
+        foreach ($array as $kX=>$rX) {
+            foreach ($rX as $kY=>$rY) {
+                ksort($array[$kX][$kY], SORT_NUMERIC);
+            }
+        }
+
+        return $array;
+    }
+
     /**
      * Used to build the imbricated array[x][y][z] = value
      * Arrays will be sorted with increasing keys (min negative to max positive)
@@ -98,15 +113,7 @@ class AsciiCubeTest extends DriverTestCase
             $this->pushToArray($r, $v[0], $v[1], $v[2], $v[3]);
         }
 
-        ksort($r, SORT_NUMERIC);
-        foreach ($r as $kX=>$rX) {
-            ksort($r[$kX], SORT_NUMERIC);
-        }
-        foreach ($r as $kX=>$rX) {
-            foreach ($rX as $kY=>$rY) {
-                ksort($r[$kX][$kY], SORT_NUMERIC);
-            }
-        }
+        $this->sortMultiArrayByKeys($r);
 
         return $r;
     }

@@ -4,6 +4,8 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Driver;
 
 use GeorgetteParty\UnicodeTesselationBundle\Exception\InvalidCubeDataException;
 
+// FIXME : DRY THESE FUNCTIONS UP (other tests use them too)
+
 if (!function_exists(__NAMESPACE__.'\\'.'strpos_recursive')) {
     /**
      * Returns an array of the positions of $needle in $haystack, starting at $offset
@@ -57,23 +59,12 @@ if (!function_exists(__NAMESPACE__.'\\'.'mb_str_pad')) {
 class Cube
     implements Driver
 {
-//    const BOX_DRAWING_INTERSECTION    = '+';
-//    const BOX_DRAWING_HORIZONTAL_LINE = '-';
-//    const BOX_DRAWING_VERTICAL_LINE   = '|';
-
 
     public $horizontal_line  = '-';
     public $vertical_line    = '|';
     public $empty_tile_value = ' ';
 
 
-
-
-//    public function __construct($options=null)
-//    {
-//        if (empty($options)) $options = array();
-//
-//    }
 
     /**
      * @param  string $string
@@ -84,43 +75,80 @@ class Cube
         $arrayOfLines = explode(PHP_EOL, $string);
 
         if (0 == count($arrayOfLines)) return array();
-//
-//        // Get the positions of the vertical separators
-//        $posOfVerticalSeparators = strpos_recursive($arrayOfLines[0], self::BOX_DRAWING_INTERSECTION);
-//
-//        $grid = array();
-//        $row = null;
-//
-//        foreach ($arrayOfLines as $line) {
-//            if (self::BOX_DRAWING_INTERSECTION == mb_substr($line, 0, 1)) { // horizontal separator line
-//                if (null !== $row) $grid[] = $row;
-//                $row = array();
-//            } else { // data line
-//                $startPos = 0;
-//                foreach ($posOfVerticalSeparators as $k => $endPos) {
-//                    if ($k > 0) {
-//                        $data = trim(mb_substr($line, $startPos + 1, $endPos - $startPos - 1));
-//                        if (isset($row[$k - 1])) {
-//                            if (mb_strlen($row[$k - 1]) && mb_strlen($data)) {
-//                                $row[$k - 1] .= ' ' . $data;
-//                            } else {
-//                                $row[$k - 1] .= $data;
-//                            }
-//                        } else {
-//                            $row[$k - 1] = $data;
-//                        }
-//                    }
-//                    $startPos = $endPos;
-//                }
-//            }
-//        }
+
+        // Measure edge size (by counting the | on the first line)
+        $posOfVerticalSeparators = strpos_recursive($arrayOfLines[0], $this->vertical_line);
+        $edgeSize = count($posOfVerticalSeparators);
+
+        if (0 == $edgeSize) return array();
+
+        $array = array();
+
+        // Pass 1 : Top ( x N z )
+        for ($i = 0 ; $i < $edgeSize ; $i++) {
+            $line = substr($arrayOfLines[2*$i+1],2);
+            for ($j = 0 ; $j < $edgeSize ; $j++) {
+                $pos = $j * 4;
+                $value = mb_strcut($line, $pos, 1);
+                $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize, $edgeSize - 1 - 2*$i);
+            }
+        }
+
+        // Pass 2 : fixme
 
 
-        return $grid;
+        $this->sortMultiArrayByKeys($array);
+
+        return $array;
+    }
+
+
+    /**
+     * This is used to build an imbricated array holding the coordinates as keys
+     *
+     * @param $array
+     * @param $value
+     * @param $x
+     * @param $y
+     * @param $z
+     *
+     * @return array
+     */
+    public function pushToArray(&$array, $value, $x, $y, $z)
+    {
+        if (empty($array[$x])) $array[$x] = array();
+        if (empty($array[$x][$y])) $array[$x][$y] = array();
+        $array[$x][$y][$z] = $value;
+
+        return $array;
     }
 
     /**
-     * Converts passed $array to its ascii grid representation
+     * Sorts the keys by ascending order on each coordinate level
+     *
+     * @param $array
+     * @return array
+     */
+    public function sortMultiArrayByKeys(&$array)
+    {
+        ksort($array, SORT_NUMERIC);
+        foreach ($array as $kX=>$rX) {
+            ksort($array[$kX], SORT_NUMERIC);
+        }
+        foreach ($array as $kX=>$rX) {
+            foreach ($rX as $kY=>$rY) {
+                ksort($array[$kX][$kY], SORT_NUMERIC);
+            }
+        }
+
+        return $array;
+    }
+
+
+
+
+    /**
+     * Converts passed $array to its ascii cube grid representation
      *
      * @param  array $array
      * @return string
@@ -237,7 +265,7 @@ class Cube
 
     /**
      * Returns a flat array
-     * fixme : make sure the order is consistent
+     * Sorted by increasing x then y then z.
      *
      * @param $fromArray
      * @param null $x
@@ -250,29 +278,19 @@ class Cube
         $values = array();
 
         foreach ($fromArray as $kX => $arrayX) {
-
             if (null === $x || $kX === $x) {
-
                 foreach ($arrayX as $kY => $arrayY) {
-
                     if (null === $y || $kY === $y) {
-
                         foreach ($arrayY as $kZ => $value) {
-
                             if (null === $z || $kZ === $z) {
-
+                                if (null === $value || '' === $value) $value = $this->empty_tile_value;
                                 $values[] = $value;
-
                             }
-
                         }
-
                     }
                 }
-
             }
         }
-
 
         return $values;
     }
