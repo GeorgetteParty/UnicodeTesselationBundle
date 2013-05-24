@@ -4,7 +4,7 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
 /**
  * These are the tests for a quadsphere's faces' lattice text representation.
- * We make a ~patron of a cube, looking like a T laying with the head on the left : ⊢
+ * We use the net of the cube shaped like a T laying with the head on the left : ⊢
  *
  * We can either draw lines and vertices around our tiles (drawing the edges and vertices of the quadsphere),
  * or draw the quadsphere's dual, ie. lines connecting our tiles.
@@ -14,7 +14,9 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
  * - isomorphic with the tiles' one (and sharing the same PHP modelisation)
  * but
  * - requires an effort to understand the folding of the "patron"
+ *   this is mitigated by drawing 'hairs', outwarding segments
  * - accepts only a single character per tile (otherwise it'll be messy I expect)
+ *   this is not a demanded feature for most use cases
  *
  *
  * About the coordinate system
