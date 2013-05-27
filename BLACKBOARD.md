@@ -1,4 +1,14 @@
+
+Look into sweetness bundle, for must-haves ?
+
+USE DUMPER IN ASCIICUBETEST !
+
+
+
+
+
 How to regex phpstorm diff dump to php arrays
+---------------------------------------------
 
 \[(-?\d)\] =>
 to

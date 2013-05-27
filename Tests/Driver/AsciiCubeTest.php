@@ -2,8 +2,6 @@
 
 namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
-//mb_internal_encoding('UTF-8');
-
 // fixme 9h15 - 10h01
 use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
@@ -11,7 +9,7 @@ use RecursiveIteratorIterator;
 
 /**
  * Provides :
- * - keys() a handy getter for all the keys in the chain
+ * - keys() a handy getter for all the keys from up in the parent tree
  *
  * Usage :
  * $iterator = new SweetRecursiveIteratorIterator(new RecursiveArrayIterator($myCubeSurfaceLatticeArray));
@@ -25,7 +23,22 @@ use RecursiveIteratorIterator;
 class SweetRecursiveIteratorIterator extends RecursiveIteratorIterator {
 
     /**
-     * Array of the keys, from root to leaf
+     * Array of the keys in the parent tree, from root to current.
+     * Example of the order :
+     * [
+     *   a => [
+     *      b => [
+     *        c => 0, # a b c
+     *        d => 0, # a b d
+     *      ],
+     *      e => [
+     *        f => 1, # a e f
+     *      ],
+     *   ],
+     *   g => [
+     *     h => 7, # g h
+     *   ],
+     * ]
      * @return array
      */
     public function keys() {
