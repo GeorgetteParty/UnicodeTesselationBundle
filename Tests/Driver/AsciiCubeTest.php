@@ -9,26 +9,36 @@ use RecursiveArrayIterator;
 use RecursiveIteratorIterator;
 
 
-
-
-
+/**
+ * Provides :
+ * - keys() a handy getter for all the keys in the chain
+ *
+ * Usage :
+ * $iterator = new SweetRecursiveIteratorIterator(new RecursiveArrayIterator($myCubeSurfaceLatticeArray));
+ * foreach( $iterator as $current ) {
+ *     ...
+ * }
+ *
+ * Class SweetRecursiveIteratorIterator
+ * @package Goutte\SweetnessBundle\Iterator
+ */
 class SweetRecursiveIteratorIterator extends RecursiveIteratorIterator {
 
-    public function getKeys() {
+    /**
+     * Array of the keys, from root to leaf
+     * @return array
+     */
+    public function keys() {
         $keys = array();
         for ($i = 0; $i < $this->getDepth(); $i++) {
             $keys[] = $this->getSubIterator($i)->key();
         }
         $keys[] = $this->key();
-//        $keys = array_reverse($keys);
+
         return $keys;
     }
 
 }
-
-
-
-
 
 
 
@@ -190,38 +200,17 @@ EOF
      * array('X',  1,  2,  1),\n
      * ad nauseam
      */
-    public function testDumpTestArrayInput()
+    public function notestDumpTestArrayInput()
     {
-        // iterator over tiles
-        // order ?
-        // - when it does not matter, intsort by x then y then z. todo
         $tiles = $this->getDumpedMap();
 
-
+        // iterator over tiles, intsort by x then y then z.
         $iterator = new SweetRecursiveIteratorIterator(new RecursiveArrayIterator($tiles));
 
-
-        foreach( $iterator as $key => $current ) {
-
-//            $keys = $key;
-//            for ($i = 0; $i < $iterator->getDepth(); $i++) {
-//                $keys = $iterator->getSubIterator($i)->key() . ', ' . $keys;
-//            }
-
-            $keys = $iterator->getKeys();
-
+        foreach( $iterator as $current ) {
+            $keys = $iterator->keys();
             echo "array('{$current}',  {$keys[0]},  {$keys[1]},  {$keys[2]})," . PHP_EOL;
-//            echo $keys . ' => ' . $current . PHP_EOL;
-
         }
-
-
-
-
-
-
-
-
     }
 
 
@@ -355,105 +344,104 @@ EOF
             array(
                "Using sample stones",
                 $this->buildArrayFromFlat(array(
-                array('.',  -4,  -3,  -3),
-                array('.',  -4,  -3,  -1),
-                array('.',  -4,  -3,  1),
-                array('.',  -4,  -3,  3),
-                array('.',  -4,  -1,  -3),
-                array('█',  -4,  -1,  -1),
-                array('.',  -4,  -1,  1),
-                array('.',  -4,  -1,  3),
-                array('.',  -4,  1,  -3),
-                array('▒',  -4,  1,  -1),
-                array('.',  -4,  1,  1),
-                array('.',  -4,  1,  3),
-                array('.',  -4,  3,  -3),
-                array('.',  -4,  3,  -1),
-                array('.',  -4,  3,  1),
-                array('.',  -4,  3,  3),
-                array('.',  -3,  -4,  -3),
-                array('.',  -3,  -4,  -1),
-                array('.',  -3,  -4,  1),
-                array('█',  -3,  -4,  3),
-                array('.',  -3,  -3,  -4),
-                array('▒',  -3,  -3,  4),
-                array('.',  -3,  -1,  -4),
-                array('!',  -3,  -1,  4),
-                array('.',  -3,  1,  -4),
-                array('.',  -3,  1,  4),
-                array('█',  -3,  3,  -4),
-                array('.',  -3,  3,  4),
-                array('▒',  -3,  4,  -3),
-                array('.',  -3,  4,  -1),
-                array('.',  -3,  4,  1),
-                array('▒',  -3,  4,  3),
-                array('.',  -1,  -4,  -3),
-                array('.',  -1,  -4,  -1),
-                array('.',  -1,  -4,  1),
-                array('▒',  -1,  -4,  3),
-                array('.',  -1,  -3,  -4),
-                array('!',  -1,  -3,  4),
-                array('.',  -1,  -1,  -4),
-                array('!',  -1,  -1,  4),
-                array('.',  -1,  1,  -4),
-                array('.',  -1,  1,  4),
-                array('.',  -1,  3,  -4),
-                array('.',  -1,  3,  4),
-                array('█',  -1,  4,  -3),
-                array('▒',  -1,  4,  -1),
-                array('.',  -1,  4,  1),
-                array('.',  -1,  4,  3),
-                array('.',  1,  -4,  -3),
-                array('.',  1,  -4,  -1),
-                array('.',  1,  -4,  1),
-                array('█',  1,  -4,  3),
-                array('.',  1,  -3,  -4),
-                array('!',  1,  -3,  4),
-                array('.',  1,  -1,  -4),
-                array('!',  1,  -1,  4),
-                array('.',  1,  1,  -4),
-                array('!',  1,  1,  4),
-                array('█',  1,  3,  -4),
-                array('.',  1,  3,  4),
-                array('.',  1,  4,  -3),
-                array('.',  1,  4,  -1),
-                array('.',  1,  4,  1),
-                array('.',  1,  4,  3),
-                array('.',  3,  -4,  -3),
-                array('.',  3,  -4,  -1),
-                array('.',  3,  -4,  1),
-                array('.',  3,  -4,  3),
-                array('█',  3,  -3,  -4),
-                array('!',  3,  -3,  4),
-                array('.',  3,  -1,  -4),
-                array('!',  3,  -1,  4),
-                array('█',  3,  1,  -4),
-                array('!',  3,  1,  4),
-                array('.',  3,  3,  -4),
-                array('.',  3,  3,  4),
-                array('▒',  3,  4,  -3),
-                array('.',  3,  4,  -1),
-                array('.',  3,  4,  1),
-                array('▒',  3,  4,  3),
-                array('■',  4,  -3,  -3),
-                array('□',  4,  -3,  -1),
-                array('.',  4,  -3,  1),
-                array('.',  4,  -3,  3),
-                array('.',  4,  -1,  -3),
-                array('.',  4,  -1,  -1),
-                array('.',  4,  -1,  1),
-                array('!',  4,  -1,  3),
-                array('.',  4,  1,  -3),
-                array('.',  4,  1,  -1),
-                array('.',  4,  1,  1),
-                array('.',  4,  1,  3),
-                array('.',  4,  3,  -3),
-                array('.',  4,  3,  -1),
-                array('.',  4,  3,  1),
-                array('.',  4,  3,  3),
-             )),
-
-               <<<EOF
+                    array('.',  -4,  -3,  -3),
+                    array('.',  -4,  -3,  -1),
+                    array('.',  -4,  -3,  1),
+                    array('.',  -4,  -3,  3),
+                    array('.',  -4,  -1,  -3),
+                    array('█',  -4,  -1,  -1),
+                    array('.',  -4,  -1,  1),
+                    array('.',  -4,  -1,  3),
+                    array('.',  -4,  1,  -3),
+                    array('▒',  -4,  1,  -1),
+                    array('.',  -4,  1,  1),
+                    array('.',  -4,  1,  3),
+                    array('.',  -4,  3,  -3),
+                    array('.',  -4,  3,  -1),
+                    array('.',  -4,  3,  1),
+                    array('.',  -4,  3,  3),
+                    array('.',  -3,  -4,  -3),
+                    array('.',  -3,  -4,  -1),
+                    array('.',  -3,  -4,  1),
+                    array('█',  -3,  -4,  3),
+                    array('.',  -3,  -3,  -4),
+                    array('▒',  -3,  -3,  4),
+                    array('.',  -3,  -1,  -4),
+                    array('!',  -3,  -1,  4),
+                    array('.',  -3,  1,  -4),
+                    array('.',  -3,  1,  4),
+                    array('█',  -3,  3,  -4),
+                    array('.',  -3,  3,  4),
+                    array('▒',  -3,  4,  -3),
+                    array('.',  -3,  4,  -1),
+                    array('.',  -3,  4,  1),
+                    array('▒',  -3,  4,  3),
+                    array('.',  -1,  -4,  -3),
+                    array('.',  -1,  -4,  -1),
+                    array('.',  -1,  -4,  1),
+                    array('▒',  -1,  -4,  3),
+                    array('.',  -1,  -3,  -4),
+                    array('!',  -1,  -3,  4),
+                    array('.',  -1,  -1,  -4),
+                    array('!',  -1,  -1,  4),
+                    array('.',  -1,  1,  -4),
+                    array('.',  -1,  1,  4),
+                    array('.',  -1,  3,  -4),
+                    array('.',  -1,  3,  4),
+                    array('█',  -1,  4,  -3),
+                    array('▒',  -1,  4,  -1),
+                    array('.',  -1,  4,  1),
+                    array('.',  -1,  4,  3),
+                    array('.',  1,  -4,  -3),
+                    array('.',  1,  -4,  -1),
+                    array('.',  1,  -4,  1),
+                    array('█',  1,  -4,  3),
+                    array('.',  1,  -3,  -4),
+                    array('!',  1,  -3,  4),
+                    array('.',  1,  -1,  -4),
+                    array('!',  1,  -1,  4),
+                    array('.',  1,  1,  -4),
+                    array('!',  1,  1,  4),
+                    array('█',  1,  3,  -4),
+                    array('.',  1,  3,  4),
+                    array('.',  1,  4,  -3),
+                    array('.',  1,  4,  -1),
+                    array('.',  1,  4,  1),
+                    array('.',  1,  4,  3),
+                    array('.',  3,  -4,  -3),
+                    array('.',  3,  -4,  -1),
+                    array('.',  3,  -4,  1),
+                    array('.',  3,  -4,  3),
+                    array('█',  3,  -3,  -4),
+                    array('!',  3,  -3,  4),
+                    array('.',  3,  -1,  -4),
+                    array('!',  3,  -1,  4),
+                    array('█',  3,  1,  -4),
+                    array('!',  3,  1,  4),
+                    array('.',  3,  3,  -4),
+                    array('.',  3,  3,  4),
+                    array('▒',  3,  4,  -3),
+                    array('.',  3,  4,  -1),
+                    array('.',  3,  4,  1),
+                    array('▒',  3,  4,  3),
+                    array('■',  4,  -3,  -3),
+                    array('□',  4,  -3,  -1),
+                    array('.',  4,  -3,  1),
+                    array('.',  4,  -3,  3),
+                    array('.',  4,  -1,  -3),
+                    array('.',  4,  -1,  -1),
+                    array('.',  4,  -1,  1),
+                    array('!',  4,  -1,  3),
+                    array('.',  4,  1,  -3),
+                    array('.',  4,  1,  -1),
+                    array('.',  4,  1,  1),
+                    array('.',  4,  1,  3),
+                    array('.',  4,  3,  -3),
+                    array('.',  4,  3,  -1),
+                    array('.',  4,  3,  1),
+                    array('.',  4,  3,  3),
+                )),
+                <<<EOF
   |   |   |   |
 --▒---.---.---▒--
   |   |   |   |
@@ -559,66 +547,6 @@ EOF
 //+---+---+---+---+
 //|   |   |   |   |
 //+---+---+---+---+
-//EOF
-//            ),
-//            array(
-//                "accepts any character at the center of each face",
-//                array(array('A')),
-//                <<<EOF
-//+---+---+---+---+
-//|   |   |   |   |
-//+---+---+---+---+
-//|   |   |   |   |
-//+---+---o---+---+
-//|   |   |   |   |
-//+---+---+---+---+
-//|   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---§---+---+---+---0---+---+---+---O---+---+---+--- ---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |
-//+---+---+---+---+
-//|   |   |   |   |
-//+---+---0---+---+
-//|   |   |   |   |
-//+---+---+---+---+
-//|   |   |   |   |
-//+---+---+---+---+
-//EOF
-//            ),
-//            array(
-//                "trying to look more like a go game, fig 2.0.1",
-//                array(array('A')),
-//                <<<EOF
-//+---+---+---+
-//|   |   |   |
-//+---+---+---+
-//|   |   |   |
-//+---+---+---+
-//|   |   |   | '
-//+---+---+---+   '
-//|   |   |   | '   '
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+
-//|   |   |   | ,   ,
-//+---+---+---+   ,
-//|   |   |   | ,
-//+---+---+---+
-//|   |   |   |
-//+---+---+---+
-//|   |   |   |
-//+---+---+---+
 //EOF
 //            ),
 //            array(
