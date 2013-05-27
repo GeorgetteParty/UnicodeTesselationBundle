@@ -53,6 +53,7 @@ if (!function_exists(__NAMESPACE__.'\\'.'mb_str_pad')) {
  *
  * Usage example :
  * fixme
+ * do we wanna use arrays or a class ? both is good. interface required for class then. opt-in, defaults to imbricated arrays
  *
  * @author Goutte
  */
@@ -72,6 +73,9 @@ class Cube
      */
     public function toArray($string)
     {
+
+//        mb_internal_encoding('UTF-8');
+
         $arrayOfLines = explode(PHP_EOL, $string);
 
         if (0 == count($arrayOfLines)) return array();
@@ -84,12 +88,12 @@ class Cube
 
         $array = array();
 
-        // Pass 1 : Top ( x N z )
+        // Pass 1 : Top ( 0 1 0 )
         for ($i = 0 ; $i < $edgeSize ; $i++) {
             $line = substr($arrayOfLines[2*$i+1],2);
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $value = mb_strcut($line, 4 * $j, 1);
-                $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize, $edgeSize - 1 - 2*$i);
+                $value = mb_substr($line, 4 * $j, 1);
+                $this->pushIntoArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize, $edgeSize - 1 - 2*$i);
             }
         }
 
@@ -98,23 +102,23 @@ class Cube
             $line = substr($arrayOfLines[2*$i+1+2*$edgeSize],2);
             // ( 0 0 -1 )
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $value = mb_strcut($line, ($j+$edgeSize*0) * 4, 1);
-                $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize - 1 - 2*$i, -1 * $edgeSize);
+                $value = mb_substr($line, ($j+$edgeSize*0) * 4, 1);
+                $this->pushIntoArray($array, $value, -1 * $edgeSize + 1 + 2*$j, $edgeSize - 1 - 2*$i, -1 * $edgeSize);
             }
             // ( 1 0 0 )
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $value = mb_strcut($line, ($j+$edgeSize*1) * 4, 1);
-                $this->pushToArray($array, $value, $edgeSize, $edgeSize - 1 - 2*$i, -1 * $edgeSize + 1 + 2*$j);
+                $value = mb_substr($line, ($j+$edgeSize*1) * 4, 1);
+                $this->pushIntoArray($array, $value, $edgeSize, $edgeSize - 1 - 2*$i, -1 * $edgeSize + 1 + 2*$j);
             }
             // ( 0 0 1 )
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $value = mb_strcut($line, ($j+$edgeSize*2) * 4, 1);
-                $this->pushToArray($array, $value, $edgeSize - 1 - 2*$j, $edgeSize - 1 - 2*$i, $edgeSize);
+                $value = mb_substr($line, ($j+$edgeSize*2) * 4, 1);
+                $this->pushIntoArray($array, $value, $edgeSize - 1 - 2*$j, $edgeSize - 1 - 2*$i, $edgeSize);
             }
             // ( -1 0 0 )
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $value = mb_strcut($line, ($j+$edgeSize*3) * 4, 1);
-                $this->pushToArray($array, $value, -1 * $edgeSize, $edgeSize - 1 - 2*$i, $edgeSize - 1 - 2*$j);
+                $value = mb_substr($line, ($j+$edgeSize*3) * 4, 1);
+                $this->pushIntoArray($array, $value, -1 * $edgeSize, $edgeSize - 1 - 2*$i, $edgeSize - 1 - 2*$j);
             }
         }
 
@@ -122,8 +126,8 @@ class Cube
         for ($i = 0 ; $i < $edgeSize ; $i++) {
             $line = substr($arrayOfLines[2*$i+1+4*$edgeSize],2);
             for ($j = 0 ; $j < $edgeSize ; $j++) {
-                $value = mb_strcut($line, 4 * $j, 1);
-                $this->pushToArray($array, $value, -1 * $edgeSize + 1 + 2*$j, -1 * $edgeSize, -1 * $edgeSize + 1 + 2*$i);
+                $value = mb_substr($line, 4*$j, 1);
+                $this->pushIntoArray($array, $value, -1 * $edgeSize + 1 + 2*$j, -1 * $edgeSize, -1 * $edgeSize + 1 + 2*$i);
             }
         }
 
@@ -144,7 +148,7 @@ class Cube
      *
      * @return array
      */
-    public function pushToArray(&$array, $value, $x, $y, $z)
+    public function pushIntoArray(&$array, $value, $x, $y, $z)
     {
         if (empty($array[$x])) $array[$x] = array();
         if (empty($array[$x][$y])) $array[$x][$y] = array();
@@ -296,6 +300,8 @@ class Cube
     /**
      * Returns a flat array
      * Sorted by increasing x then y then z.
+     *
+     * => dry this with iterator
      *
      * @param $fromArray
      * @param null $x

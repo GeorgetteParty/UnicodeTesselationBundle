@@ -2,6 +2,36 @@
 
 namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
+//mb_internal_encoding('UTF-8');
+
+// fixme 9h15 - 10h01
+use RecursiveArrayIterator;
+use RecursiveIteratorIterator;
+
+
+
+
+
+class SweetRecursiveIteratorIterator extends RecursiveIteratorIterator {
+
+    public function getKeys() {
+        $keys = array();
+        for ($i = 0; $i < $this->getDepth(); $i++) {
+            $keys[] = $this->getSubIterator($i)->key();
+        }
+        $keys[] = $this->key();
+//        $keys = array_reverse($keys);
+        return $keys;
+    }
+
+}
+
+
+
+
+
+
+
 /**
  * These are the tests for a quadsphere's faces' lattice text representation.
  * We use the net of the cube shaped like a T laying with the head on the left : ⊢
@@ -11,13 +41,13 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
  *
  * Dual modelisation is
  * - closer to go æsthetically
+ * - drawing the connections
  * - isomorphic with the tiles' one (and sharing the same PHP modelisation)
  * but
  * - requires an effort to understand the folding of the "patron"
  *   this is mitigated by drawing 'hairs', outwarding segments
- * - accepts only a single character per tile (otherwise it'll be messy I expect)
- *   this is not a demanded feature for most use cases
  *
+ * Let's roll with dual, then, for starters, accepting only a single character per tile
  *
  * About the coordinate system
  * ( 0, 0, 0 ) is the center of the cube.
@@ -54,9 +84,10 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
  * - white : W ▒ □ ◯
  * - black : B █ ■ ●
  *
+ * tiles[2][1][-1]
+ *
  * @author Goutte
  */
- // fixme 9h15 - 10h01
 class AsciiCubeTest extends DriverTestCase
 {
 
@@ -64,6 +95,39 @@ class AsciiCubeTest extends DriverTestCase
     {
         return new \GeorgetteParty\UnicodeTesselationBundle\Driver\Cube();
     }
+
+
+    protected function getDumpedMap(){
+        return $this->driver->toArray(<<<EOF
+  |   |   |   |
+--▒---.---.---▒--
+  |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--.---▒---.---.--
+  |   |   |   |
+--▒---█---.---▒--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--█---.---█---.---.---.---.---.---.---.---.---.---.---.---.---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---█---.---.---.---.---!---!---.---.---.---.---▒---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---.---.---.---.---!---!---!---!---!---.---.---█---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---█---■---□---.---.---!---!---!---▒---.---.---.---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--█---▒---█---.--
+  |   |   |   |
+EOF
+        );
+    }
+
 
 
     /**
@@ -121,6 +185,48 @@ class AsciiCubeTest extends DriverTestCase
     }
 
 
+    /**
+     * eg :
+     * array('X',  1,  2,  1),\n
+     * ad nauseam
+     */
+    public function testDumpTestArrayInput()
+    {
+        // iterator over tiles
+        // order ?
+        // - when it does not matter, intsort by x then y then z. todo
+        $tiles = $this->getDumpedMap();
+
+
+        $iterator = new SweetRecursiveIteratorIterator(new RecursiveArrayIterator($tiles));
+
+
+        foreach( $iterator as $key => $current ) {
+
+//            $keys = $key;
+//            for ($i = 0; $i < $iterator->getDepth(); $i++) {
+//                $keys = $iterator->getSubIterator($i)->key() . ', ' . $keys;
+//            }
+
+            $keys = $iterator->getKeys();
+
+            echo "array('{$current}',  {$keys[0]},  {$keys[1]},  {$keys[2]})," . PHP_EOL;
+//            echo $keys . ' => ' . $current . PHP_EOL;
+
+        }
+
+
+
+
+
+
+
+
+    }
+
+
+
+
 
     public function arrayToStringProvider()
     {
@@ -168,6 +274,26 @@ class AsciiCubeTest extends DriverTestCase
                 <<<EOF
   |
 --A--
+  |   |   |   |
+--B---D---E---F--
+  |   |   |   |
+--C--
+  |
+EOF
+            ),
+            array(
+                "0 subdivisions, using weird chars (█)",
+                $this->buildArrayFromFlat(array(
+                    array('█',  0,  1,  0),
+                    array('B',  0,  0, -1),
+                    array('C',  0, -1,  0),
+                    array('D',  1,  0,  0),
+                    array('E',  0,  0,  1),
+                    array('F', -1,  0,  0),
+                )),
+                <<<EOF
+  |
+--█--
   |   |   |   |
 --B---D---E---F--
   |   |   |   |
@@ -224,6 +350,141 @@ EOF
   |   |
 EOF
             ),
+
+
+            array(
+               "Using sample stones",
+                $this->buildArrayFromFlat(array(
+                array('.',  -4,  -3,  -3),
+                array('.',  -4,  -3,  -1),
+                array('.',  -4,  -3,  1),
+                array('.',  -4,  -3,  3),
+                array('.',  -4,  -1,  -3),
+                array('█',  -4,  -1,  -1),
+                array('.',  -4,  -1,  1),
+                array('.',  -4,  -1,  3),
+                array('.',  -4,  1,  -3),
+                array('▒',  -4,  1,  -1),
+                array('.',  -4,  1,  1),
+                array('.',  -4,  1,  3),
+                array('.',  -4,  3,  -3),
+                array('.',  -4,  3,  -1),
+                array('.',  -4,  3,  1),
+                array('.',  -4,  3,  3),
+                array('.',  -3,  -4,  -3),
+                array('.',  -3,  -4,  -1),
+                array('.',  -3,  -4,  1),
+                array('█',  -3,  -4,  3),
+                array('.',  -3,  -3,  -4),
+                array('▒',  -3,  -3,  4),
+                array('.',  -3,  -1,  -4),
+                array('!',  -3,  -1,  4),
+                array('.',  -3,  1,  -4),
+                array('.',  -3,  1,  4),
+                array('█',  -3,  3,  -4),
+                array('.',  -3,  3,  4),
+                array('▒',  -3,  4,  -3),
+                array('.',  -3,  4,  -1),
+                array('.',  -3,  4,  1),
+                array('▒',  -3,  4,  3),
+                array('.',  -1,  -4,  -3),
+                array('.',  -1,  -4,  -1),
+                array('.',  -1,  -4,  1),
+                array('▒',  -1,  -4,  3),
+                array('.',  -1,  -3,  -4),
+                array('!',  -1,  -3,  4),
+                array('.',  -1,  -1,  -4),
+                array('!',  -1,  -1,  4),
+                array('.',  -1,  1,  -4),
+                array('.',  -1,  1,  4),
+                array('.',  -1,  3,  -4),
+                array('.',  -1,  3,  4),
+                array('█',  -1,  4,  -3),
+                array('▒',  -1,  4,  -1),
+                array('.',  -1,  4,  1),
+                array('.',  -1,  4,  3),
+                array('.',  1,  -4,  -3),
+                array('.',  1,  -4,  -1),
+                array('.',  1,  -4,  1),
+                array('█',  1,  -4,  3),
+                array('.',  1,  -3,  -4),
+                array('!',  1,  -3,  4),
+                array('.',  1,  -1,  -4),
+                array('!',  1,  -1,  4),
+                array('.',  1,  1,  -4),
+                array('!',  1,  1,  4),
+                array('█',  1,  3,  -4),
+                array('.',  1,  3,  4),
+                array('.',  1,  4,  -3),
+                array('.',  1,  4,  -1),
+                array('.',  1,  4,  1),
+                array('.',  1,  4,  3),
+                array('.',  3,  -4,  -3),
+                array('.',  3,  -4,  -1),
+                array('.',  3,  -4,  1),
+                array('.',  3,  -4,  3),
+                array('█',  3,  -3,  -4),
+                array('!',  3,  -3,  4),
+                array('.',  3,  -1,  -4),
+                array('!',  3,  -1,  4),
+                array('█',  3,  1,  -4),
+                array('!',  3,  1,  4),
+                array('.',  3,  3,  -4),
+                array('.',  3,  3,  4),
+                array('▒',  3,  4,  -3),
+                array('.',  3,  4,  -1),
+                array('.',  3,  4,  1),
+                array('▒',  3,  4,  3),
+                array('■',  4,  -3,  -3),
+                array('□',  4,  -3,  -1),
+                array('.',  4,  -3,  1),
+                array('.',  4,  -3,  3),
+                array('.',  4,  -1,  -3),
+                array('.',  4,  -1,  -1),
+                array('.',  4,  -1,  1),
+                array('!',  4,  -1,  3),
+                array('.',  4,  1,  -3),
+                array('.',  4,  1,  -1),
+                array('.',  4,  1,  1),
+                array('.',  4,  1,  3),
+                array('.',  4,  3,  -3),
+                array('.',  4,  3,  -1),
+                array('.',  4,  3,  1),
+                array('.',  4,  3,  3),
+             )),
+
+               <<<EOF
+  |   |   |   |
+--▒---.---.---▒--
+  |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--.---▒---.---.--
+  |   |   |   |
+--▒---█---.---▒--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--█---.---█---.---.---.---.---.---.---.---.---.---.---.---.---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---█---.---.---.---.---!---!---.---.---.---.---▒---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---.---.---.---.---!---!---!---!---!---.---.---█---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---█---■---□---.---.---!---!---!---▒---.---.---.---.--
+  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--.---.---.---.--
+  |   |   |   |
+--█---▒---█---.--
+  |   |   |   |
+EOF
+           ),
+
+
+
+
 //            array(
 //                "fig 1.0.0",
 //                array(array('A')),
@@ -252,7 +513,7 @@ EOF
 //            ),
 //            array(
 //                "TODO",
-//                array(array('A')), # fixme
+//                array(array('A')),
 //                <<<EOF
 //+---+---+
 //|   |   |
@@ -271,7 +532,7 @@ EOF
 //            ),
 //            array(
 //                "TODO",
-//                array(array('A')), # fixme
+//                array(array('A')),
 //                <<<EOF
 //+---+---+---+---+
 //|   |   |   |   |
@@ -302,7 +563,7 @@ EOF
 //            ),
 //            array(
 //                "accepts any character at the center of each face",
-//                array(array('A')), # fixme
+//                array(array('A')),
 //                <<<EOF
 //+---+---+---+---+
 //|   |   |   |   |
@@ -333,7 +594,7 @@ EOF
 //            ),
 //            array(
 //                "trying to look more like a go game, fig 2.0.1",
-//                array(array('A')), # fixme
+//                array(array('A')),
 //                <<<EOF
 //+---+---+---+
 //|   |   |   |
@@ -362,7 +623,7 @@ EOF
 //            ),
 //            array(
 //                "trying to look more like a go game, fig 2.1.1",
-//                array(array('A')), # fixme
+//                array(array('A')),
 //                <<<EOF
 //  |   |   |   |
 //--+---+---+---+--
@@ -377,7 +638,7 @@ EOF
 //  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 //--+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+--
 //  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//--+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+--
+//--+---+---+---+---+---+---+---!---+---+---+---+---+---+---+---+--
 //  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 //--+---+---+---+---+---+---+---+---+---+---+---+---+---+---+---+--
 //  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
@@ -391,37 +652,7 @@ EOF
 //  |   |   |   |
 //EOF
 //            ),
-//            array(
-//                "with stones",
-//                array(array('A')), # fixme
-//                <<<EOF
-//  |   |   |   |
-//--▒---.---.---▒--
-//  |   |   |   |
-//--.---.---.---.--
-//  |   | + |   |
-//--.---▒---.---.--
-//  |   |   |   |
-//--▒---█---.---▒--
-//  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//--█---.---█---.---.---.---.---.---.---.---.---.---.---.---.---.--
-//  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//--.---.---.---█---.---.---.---.---#---#---.---.---.---.---▒---.--
-//  |   | + |   |   |   | + |   |   |   | + |   |   |   | + |   |
-//--.---.---.---.---.---.---.---#---#---#---#---#---.---.---█---.--
-//  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//--.---.---.---█---■---□---.---.---#---@---@---▒---.---.---.---.--
-//  |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
-//--.---.---.---.--
-//  |   |   |   |
-//--.---.---.---.--
-//  |   | + |   |
-//--.---.---.---.--
-//  |   |   |   |
-//--█---▒---█---.--
-//  |   |   |   |
-//EOF
-//            ),
+
 
         );
     }
@@ -430,3 +661,4 @@ EOF
 
 // 黑 Black
 // 白 White
+
