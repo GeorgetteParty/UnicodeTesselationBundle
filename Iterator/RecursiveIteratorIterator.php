@@ -52,4 +52,18 @@ class RecursiveIteratorIterator extends OriginalRecursiveIteratorIterator {
         return $keys;
     }
 
+    // UNUSED / NOT WORKING
+    public function setCurrent($value)
+    {
+        $keys = $this->keys();
+
+        // fixme : find out if we can access by reference the multiarray passed to the innerIterator
+
+        for ($i =& $array; $key = array_shift($keys); $i =& $i[$key]) {
+            if (!isset($i[$key])) $i[$key] = array();
+        }
+        $i = $value;
+
+    }
+
 }
