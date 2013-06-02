@@ -4,54 +4,8 @@ namespace GeorgetteParty\UnicodeTesselationBundle\Tests\Driver;
 
 // fixme 9h15 - 10h01
 use RecursiveArrayIterator;
-use RecursiveIteratorIterator;
+use GeorgetteParty\UnicodeTesselationBundle\Iterator\RecursiveIteratorIterator;
 
-
-/**
- * Provides :
- * - keys() a handy getter for all the keys from up in the parent tree
- *
- * Usage :
- * $iterator = new SweetRecursiveIteratorIterator(new RecursiveArrayIterator($myCubeSurfaceLatticeArray));
- * foreach( $iterator as $current ) {
- *     ...
- * }
- *
- * Class SweetRecursiveIteratorIterator
- * @package Goutte\SweetnessBundle\Iterator
- */
-class SweetRecursiveIteratorIterator extends RecursiveIteratorIterator {
-
-    /**
-     * Array of the keys in the parent tree, from root to current.
-     * Example of the order :
-     * [
-     *   a => [
-     *      b => [
-     *        c => 0, # a b c
-     *        d => 0, # a b d
-     *      ],
-     *      e => [
-     *        f => 1, # a e f
-     *      ],
-     *   ],
-     *   g => [
-     *     h => 7, # g h
-     *   ],
-     * ]
-     * @return array
-     */
-    public function keys() {
-        $keys = array();
-        for ($i = 0; $i < $this->getDepth(); $i++) {
-            $keys[] = $this->getSubIterator($i)->key();
-        }
-        $keys[] = $this->key();
-
-        return $keys;
-    }
-
-}
 
 
 
@@ -213,12 +167,12 @@ EOF
      * array('X',  1,  2,  1),\n
      * ad nauseam
      */
-    public function notestDumpTestArrayInput()
+    public function testDumpTestArrayInput()
     {
         $tiles = $this->getDumpedMap();
 
         // iterator over tiles, intsort by x then y then z.
-        $iterator = new SweetRecursiveIteratorIterator(new RecursiveArrayIterator($tiles));
+        $iterator = new RecursiveIteratorIterator(new RecursiveArrayIterator($tiles));
 
         foreach( $iterator as $current ) {
             $keys = $iterator->keys();
